@@ -1,0 +1,124 @@
+/* 全局样式 */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", sans-serif;
+    background-color: #e9e9e9; /* 调整为更亮的背景色 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    /* background-image: url(./img/image.png); */
+}
+
+#game-container {
+    text-align: center;
+    color: #333;
+}
+
+#board-wrapper {
+    padding: 20px;
+    background-color: #c1a485; /* 棋盘外框颜色 */
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15), inset 0 0 5px rgba(0,0,0,0.1);
+}
+
+/* 棋盘容器 */
+#board {
+    position: relative;
+    /* 棋盘尺寸：格子尺寸 * 格子数 */
+    /* 宽度: 60px * 8 = 480px */
+    /* 高度: 60px * 9 = 540px */
+    width: 480px;
+    height: 540px;
+    background-color: #e6c8a4; /* 棋盘木色 */
+    border: 1px solid #5a3a1a; /* 棋盘边框线 */
+
+    /* 使用背景渐变绘制棋盘网格线 */
+    background-image:
+        /* 垂直线 (9条) */
+        repeating-linear-gradient(to right, #5a3a1a 0, #5a3a1a 1px, transparent 1px, transparent 60px),
+        /* 水平线 (10条) */
+        repeating-linear-gradient(to bottom, #5a3a1a 0, #5a3a1a 1px, transparent 1px, transparent 60px);
+    
+    /* 调整背景大小和位置让线条落在交叉点上 */
+    background-size: 60px 60px;
+    /* 偏移半个线宽，让(0,0)点在左上角交叉点 */
+    background-position: -0.5px -0.5px;
+}
+
+/* 楚河汉界 */
+.river {
+    position: absolute;
+    width: 100%;
+    height: 60px; /* 一个格子的高度 */
+    top: 240px; /* 棋盘中间第5行 */
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    letter-spacing: 1.5em; /* 增加文字间距 */
+    color: #8c6f50;
+    pointer-events: none; /* 让鼠标事件可以穿透 */
+    background: #e6c8a4; /* 覆盖掉垂直线 */
+}
+
+/* 九宫格斜线 */
+.palace {
+    position: absolute;
+    width: 120px;  /* 2个格子宽 */
+    height: 120px; /* 2个格子高 */
+    pointer-events: none; /* 让鼠标事件可以穿透 */
+}
+.palace::before, .palace::after {
+    content: '';
+    position: absolute;
+    width: 168px; /* 对角线长度 (120 * sqrt(2)) */
+    height: 1px;
+    background-color: #8c6f50;
+    top: 60px; /* 旋转中心 Y */
+    left: -24px; /* 旋转中心 X */
+}
+.palace::before {
+    transform: rotate(45deg);
+}
+.palace::after {
+    transform: rotate(-45deg);
+}
+
+/* 棋子基础样式 */
+.piece {
+    position: absolute;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background-color: #f5e4c3;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2), inset 0 2px 2px rgba(255,255,255,0.5); /* 增加内阴影提升质感 */
+    border-width: 2px;
+    border-style: solid;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    user-select: none; /* 禁止选中文本 */
+}
+
+.piece:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3), inset 0 2px 2px rgba(255,255,255,0.5);
+}
+
+/* 红色棋子 */
+.piece.red {
+    color: #e83a3a;
+    border-color: #e83a3a;
+}
+
+/* 黑色棋子 */
+.piece.black {
+    color: #333;
+    border-color: #333;
+}
