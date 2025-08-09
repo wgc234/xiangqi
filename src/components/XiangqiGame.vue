@@ -42,28 +42,34 @@
 import { ref, watch, computed, onMounted, onUnmounted } from 'vue';
 
 
-const bgm = new Audio('/mp3/M500000S6mXr3UR0Dl.mp3'); // 替换成你完整的音频文件名！
+const bgm = new Audio(`${import.meta.env.BASE_URL}mp3/M500000S6mXr3UR0Dl.mp3`); // 使用动态基础路径访问public目录下的音频文件
 bgm.loop = true; // 设置为循环播放
 bgm.volume = 0.3; // 设置一个合适的初始音量（0.0 到 1.0）
 
 // 使用 onMounted 生命周期钩子，在组件挂载到页面后执行
 onMounted(() => {
+  console.log('%c[DIAG] XiangqiGame.vue COMPONENT MOUNTED', 'color: white; background-color: green; font-weight: bold; padding: 4px;');
   console.log("组件已挂载，尝试播放背景音乐...");
+  
   // 现代浏览器通常需要用户与页面进行一次交互后才能自动播放音频。
   // 我们尝试播放，如果失败，则引导用户点击来播放。
   const playPromise = bgm.play();
   
   if (playPromise !== undefined) {
-    playPromise.catch(error => {
+    playPromise.then(() => {
+      console.log("背景音乐自动播放成功！");
+    }).catch(error => {
       // 自动播放失败，这是预料之中的
       console.warn("背景音乐自动播放失败:", error);
       // 创建一个播放按钮，或者监听一次点击事件来启动音乐
       const playBgmOnClick = () => {
-        bgm.play();
-        // 成功播放后，移除这个一次性的点击监听器
-        window.removeEventListener('click', playBgmOnClick);
-        console.log("用户交互后，背景音乐已开始播放。");
+        bgm.play().then(() => {
+          console.log("用户交互后，背景音乐已开始播放。");
+        }).catch(err => {
+          console.error("音频播放失败:", err);
+        });
       };
+      // 使用once选项更简洁
       window.addEventListener('click', playBgmOnClick, { once: true });
       console.log("已设置监听器，请点击页面任意位置以播放背景音乐。");
     });
@@ -400,12 +406,7 @@ const getMoveStyle = (move) => {
   };
 };
 
-// ===================================================================
-// 诊断日志：确认组件已挂载到 DOM
-// ===================================================================
-onMounted(() => {
-  console.log('%c[DIAG] XiangqiGame.vue COMPONENT MOUNTED', 'color: white; background-color: green; font-weight: bold; padding: 4px;');
-});
+// 诊断日志已合并到上面的onMounted钩子中
 </script>
 
 <style scoped>
